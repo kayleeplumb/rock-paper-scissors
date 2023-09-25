@@ -9,14 +9,13 @@ function getComputerChoice () {
             return "paper";
         case 3:
             return "scissors";
-    }
-    
+    }   
 }
 
 // return -1 if lost, 1 if won, 0 if tie
-function playRound (playerSelection) {
+function playRound (playerSelection, computerSelection) {
     player = playerSelection.toLowerCase();
-    computer = getComputerChoice();
+    computer = computerSelection;
     
     if (player === computer) {
         return 0;
@@ -45,9 +44,7 @@ function game() {
 
 //console.log("Total: " + game());
 
-const rock = document.querySelector('#rock');
-const paper = document.querySelector('#paper');
-const scissors = document.querySelector('#scissors');
+const buttons = document.querySelectorAll('button');
 
 const announceScore = document.createElement('div');
 const body = document.querySelector('body');
@@ -60,40 +57,48 @@ let computerScore = 0;
 //announce the game
 let announcement = "Let's play Rock Paper Scissors!";
 announceScore.textContent = announcement;
+body.appendChild(announceScore);
+
 let newAnnouncement = "";
 
 // play a round
-rock.addEventListener('click', () => {
+buttons.forEach((button) => {
     
-    score = playRound("rock");
-    console.log(score);
-
-    // add score if game not over
-    if (playerScore < 5 && computerScore < 5) {
-        if (score === 1) {
-            playerScore += 1;
-            newAnnouncement = "Rock beats paper! "
-
-        } else if (score === -1) {
-            computerScore += 1;
-            newAnnouncement = "Rock loses to paper. "
-        } else {
-            newAnnouncement = "Tie! "
-        }
-    }
-
-    // game complete, no more score changes
-    if (playerScore === 5) {
-        newAnnouncement = "You won! Final ";
-    } else if (computerScore === 5) {
-        newAnnouncement = "You lost. Final ";
-    }
-
-    announceScore.textContent = (newAnnouncement +  "Score: " + playerScore + " to " + computerScore);
+    button.addEventListener('click', () => {
     
+        let computerChoice = getComputerChoice();
+        let playerChoice = button.id;
+        score = playRound(playerChoice, computerChoice);
+        console.log(score);
 
-    console.log("Player Score: " + playerScore + " Computer Score: " + computerScore);
+
+        // add score if game not over
+        if (playerScore < 5 && computerScore < 5) {
+            if (score === 1) {
+                playerScore += 1;
+                newAnnouncement = `${playerChoice} beats ${computerChoice}! `
+
+            } else if (score === -1) {
+                computerScore += 1;
+                newAnnouncement = `${playerChoice} loses to ${computerChoice}. `
+            } else {
+                newAnnouncement = "Tie! "
+            }
+        };
+
+        // game complete, no more score changes
+        if (playerScore === 5) {
+            newAnnouncement = "You won! Final ";
+        } else if (computerScore === 5) {
+            newAnnouncement = "You lost. Final ";
+        };
+
+        announceScore.textContent = (newAnnouncement +  "Score: " + playerScore + " to " + computerScore);
+        console.log("Player Score: " + playerScore + " Computer Score: " + computerScore);
+    });
 });
 
-body.appendChild(announceScore);
+    
+
+
 
